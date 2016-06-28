@@ -57,12 +57,12 @@ public class CollectionDataset<T> extends Dataset<T> {
 
     @Override
     public void findMatches(final String query, final SuggestionCallback<T> callback) {
-        String queryLower = query.toLowerCase();
+        String queryLower = (query == null ? "": query.toLowerCase());
         Collection<Suggestion<T>> suggestions = new ArrayList<Suggestion<T>>();
         if (data != null) {
               for (T datum : data) {
                   String value = getValue(datum);
-                      if (value.toLowerCase().contains(queryLower)) {
+                      if (queryLower.length() == 0 || value.toLowerCase().contains(queryLower)) {
                           Suggestion<T> suggestion = Suggestion.create(value, datum, this);
                           suggestions.add(suggestion);
                       }

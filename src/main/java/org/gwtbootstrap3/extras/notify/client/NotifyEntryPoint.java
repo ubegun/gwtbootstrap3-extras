@@ -38,10 +38,6 @@ public class NotifyEntryPoint implements EntryPoint {
      * @return <code>true</code> if notify is loaded, <code>false</code> otherwise
      */
     private native boolean isNotifyLoaded() /*-{
-        if ($wnd.jQuery && $wnd.jQuery.notify) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($wnd.jQuery && $wnd.jQuery.notify);
     }-*/;
 }

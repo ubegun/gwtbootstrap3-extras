@@ -4,7 +4,7 @@ package org.gwtbootstrap3.extras.fullcalendar.client.ui;
  * #%L
  * GwtBootstrap3
  * %%
- * Copyright (C) 2013 - 2015 GwtBootstrap3
+ * Copyright (C) 2013 - 2014 GwtBootstrap3
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,26 +83,13 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
     }
 
     private void renderCalendar() {
-        boolean selectable = false;
-        boolean selectHelper = false;
-        boolean unselectAuto = true;
-        boolean selectOverlap = true;
-
         JsArray<JavaScriptObject> javascriptParams = null;
         String language = null;
         String timezone = null;
         String weekNumberTitle = null;
-        String unselectCancel = null;
-        String selectContraint = null;
         if (config != null) {
-            selectable = config.isSelectable();
-            selectHelper = config.isSelectHelper();
-            unselectAuto = config.isUnselectAuto();
-            selectOverlap = config.isSelectOverlap();
             timezone = config.getTimezone();
             weekNumberTitle = config.getWeekNumberTitle();
-            unselectCancel = config.getUnselectCancel();
-            selectContraint = config.getSelectContraint();
             javascriptParams = config.getJavaScriptParameters();
             if (config.getLangauge() != null) {
                 language = config.getLangauge().getCode();
@@ -112,15 +99,9 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
         addCalendar(getElement().getId(),
                 currentView.name(),
                 editable,
-                selectable,
-                selectHelper,
-                unselectAuto,
-                selectOverlap,
                 language,
                 timezone,
                 weekNumberTitle,
-                unselectCancel,
-                selectContraint,
                 javascriptParams
         );
         //Let everyone know it is ok to add events and set properties on the instance
@@ -167,24 +148,17 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
     private native void addCalendar(String id,
                                     String currentView,
                                     boolean editable,
-                                    boolean selectable,
-                                    boolean selectHelper,
-                                    boolean unselectAuto,
-                                    boolean selectOverlap,
                                     String lang,
                                     String timezone,
                                     String weekNumberTitle,
-                                    String unselectCancel,
-                                    String selectContraint,
                                     JsArray<JavaScriptObject> options
     ) /*-{
         var fullCalendarParams = {
             defaultView: currentView,
-            selectable: selectable,
-            selectHelper: selectHelper,
-            editable: editable,
-            unselectAuto: unselectAuto,
-            selectOverlap: selectOverlap
+            selectable: true,
+            selectHelper: true,
+            editable: editable
+
         };
         if (lang) {
             fullCalendarParams.lang = lang;
@@ -194,12 +168,6 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
         }
         if (weekNumberTitle) {
             fullCalendarParams.weekNumberTitle = weekNumberTitle;
-        }
-        if (unselectCancel) {
-            fullCalendarParams.unselectCancel = unselectCancel;
-        }
-        if (selectContraint) {
-            fullCalendarParams.selectContraint = selectContraint;
         }
         if (options) {
             for (var i = 0; i < options.length; i++) {
@@ -217,18 +185,11 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
 
     public void addEvents(final List<Event> events) {
         if (loaded && events != null && !events.isEmpty()) {
-            JsArray<JavaScriptObject> jsEvents = JavaScriptObject.createArray(events.size()).cast();
-            int i = 0;
             for (final Event evt : events) {
-                jsEvents.set(i++, evt.toJavaScript());
+                addEvent(getElement().getId(), evt.toJavaScript());
             }
-            addEventSource(getElement().getId(), jsEvents);
         }
     }
-
-    private native void addEventSource(String id, JsArray<JavaScriptObject> events) /*-{
-        $wnd.jQuery('#' + id).fullCalendar('addEventSource', events);
-    }-*/;
 
     public ViewOption getCurrentView() {
         return currentView;
@@ -281,14 +242,6 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
             removeEvent(getElement().getId(), eventId);
         }
     }
-
-    public void removeAllEvents() {
-        removeAllEvents(getElement().getId());
-    }
-
-    private native void removeAllEvents(String id) /*-{
-        $wnd.jQuery('#' + id).fullCalendar('removeEvents');
-    }-*/;
 
     public native void removeEvent(String id, String eventId) /*-{
         $wnd.jQuery('#' + id).fullCalendar('removeEvents', eventId);
@@ -417,20 +370,8 @@ public class FullCalendar extends FlowPanel implements HasLoadHandlers {
      *
      * @param revertFunction
      */
-    public native void executeFunction(JavaScriptObject revertFunction)/*-{
+    public native void excecuteFunction(JavaScriptObject revertFunction)/*-{
         revertFunction();
-    }-*/;
-    
-    public void select(Date start, Date end) {
-        select(getElement().getId(), Event.getDateAsISO8601(start), Event.getDateAsISO8601(end));
-    }
-
-    public void select(String start, String end) {
-        select(getElement().getId(), start, end);
-    }
-    
-    private native void select(String id, String start, String end) /*-{
-        $wnd.jQuery('#' + id).fullCalendar('select', start, end);
     }-*/;
     
     public void unselect() {

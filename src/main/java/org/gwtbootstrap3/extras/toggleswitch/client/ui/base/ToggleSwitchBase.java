@@ -4,7 +4,7 @@ package org.gwtbootstrap3.extras.toggleswitch.client.ui.base;
  * #%L
  * GwtBootstrap3
  * %%
- * Copyright (C) 2013 - 2016 GwtBootstrap3
+ * Copyright (C) 2013 - 2015 GwtBootstrap3
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,18 @@ package org.gwtbootstrap3.extras.toggleswitch.client.ui.base;
  * #L%
  */
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.editor.client.IsEditor;
+import com.google.gwt.editor.client.LeafValueEditor;
+import com.google.gwt.editor.client.adapters.TakesValueEditor;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.*;
+
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.base.HasId;
-import org.gwtbootstrap3.client.ui.base.HasReadOnly;
 import org.gwtbootstrap3.client.ui.base.HasResponsiveness;
 import org.gwtbootstrap3.client.ui.base.HasSize;
 import org.gwtbootstrap3.client.ui.base.helper.StyleHelper;
@@ -34,31 +43,14 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.ColorType;
 import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.SizeType;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.editor.client.IsEditor;
-import com.google.gwt.editor.client.LeafValueEditor;
-import com.google.gwt.editor.client.adapters.TakesValueEditor;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.HasName;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVisibility;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Original source from http://www.bootstrap-switch.org/
- *
  * @author Grant Slender
- * @author Steven Jardine
  */
 public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasValue<Boolean>, HasValueChangeHandlers<Boolean>,
-        HasEnabled, HasVisibility, HasId, HasName, HasReadOnly, HasResponsiveness, IsEditor<LeafValueEditor<Boolean>> {
+        HasEnabled, HasVisibility, HasId, HasName, HasResponsiveness, IsEditor<LeafValueEditor<Boolean>> {
 
-    private final InputElement element;
+    private final SimpleCheckBox checkBox;
     private SizeType size = SizeType.REGULAR;
     private ColorType onColor = ColorType.DEFAULT;
     private ColorType offColor = ColorType.PRIMARY;
@@ -66,9 +58,11 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
     private final AttributeMixin<ToggleSwitchBase> attributeMixin = new AttributeMixin<ToggleSwitchBase>(this);
     private LeafValueEditor<Boolean> editor;
 
-    protected ToggleSwitchBase(InputElement element) {
-        this.element = element;
-        setElement(element);
+    protected ToggleSwitchBase(SimpleCheckBox checkBox) {
+        this.checkBox = checkBox;
+        // remove the gwt styles
+        checkBox.setStyleName("");
+        setElement((Element) checkBox.getElement());
     }
 
     @Override
@@ -102,15 +96,15 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
     public String getId() {
         return idMixin.getId();
     }
-
+    
     @Override
     public void setName(String name) {
-        element.setName(name);
+        checkBox.setName(name);
     }
 
     @Override
     public String getName() {
-        return element.getName();
+        return checkBox.getName();
     }
 
     @Override
@@ -204,7 +198,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
         if (isAttached()) {
             return switchState(getElement());
         }
-        return element.isChecked();
+        return checkBox.getValue();
     }
 
     @Override
@@ -218,7 +212,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
         if (isAttached()) {
             switchState(getElement(), value, true);
         } else {
-            element.setChecked(value);
+            checkBox.setValue(value);
         }
         if (fireEvents) {
             ValueChangeEvent.fireIfNotEqual(ToggleSwitchBase.this, oldValue, value);
@@ -236,13 +230,11 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
         }
         return editor;
     }
-
-    @Override
+    
     public boolean isReadOnly() {
         return getBooleanAttribute(Option.READONLY);
     }
 
-    @Override
     public void setReadOnly(boolean readOnly) {
         updateSwitch(Option.READONLY, readOnly);
     }
@@ -257,22 +249,22 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
     public void setIndeterminate(boolean indeterminate) {
         updateSwitch(Option.INDETERMINATE, indeterminate);
     }
-
+    
     public boolean isInverse() {
         return getBooleanAttribute(Option.INVERSE);
     }
-
+    
     /**
      * Inverse switch direction.
      */
     public void setInverse(boolean inverse) {
         updateSwitch(Option.INVERSE, inverse);
     }
-
+    
     public boolean isRadioAllOff() {
         return getBooleanAttribute(Option.RADIO_ALL_OFF);
     }
-
+    
     /**
      * Allow this radio button to be unchecked by the user.
      */
@@ -295,24 +287,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
     public void setLabelWidth(String labelWidth) {
         updateSwitch(Option.LABEL_WIDTH, labelWidth);
     }
-
-    @Override
-    public void setVisible(boolean visible) {
-        if (isAttached()) {
-            setVisible(getElement().getParentElement().getParentElement(), visible);
-        } else {
-            super.setVisible(visible);
-        }
-    }
-
-    @Override
-    public boolean isVisible() {
-        if (isAttached()) {
-            return isVisible(getElement().getParentElement().getParentElement());
-        }
-        return super.isVisible();
-    }
-
+    
     private String createIconHtml(IconType iconType) {
         // Fix incorrect handle width when using icons
         setHandleWidth("30");
@@ -320,7 +295,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
         icon.setSize(IconSize.LARGE);
         return icon.getElement().getString();
     }
-
+    
     private void updateSwitch(Option option, String value) {
         if (isAttached()) {
             switchCmd(getElement(), option.getCommand(), value);
@@ -328,7 +303,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
             attributeMixin.setAttribute(option.getAttribute(), value);
         }
     }
-
+    
     private void updateSwitch(Option option, boolean value) {
         if (isAttached()) {
             switchCmd(getElement(), option.getCommand(), value);
@@ -336,7 +311,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
             attributeMixin.setAttribute(option.getAttribute(), Boolean.toString(value));
         }
     }
-
+    
     private String getStringAttribute(Option option) {
         if (isAttached()) {
             return getCommandStringValue(getElement(), option.getCommand());
@@ -344,7 +319,7 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
             return attributeMixin.getAttribute(option.getAttribute());
         }
     }
-
+    
     private boolean getBooleanAttribute(Option option) {
         if (isAttached()) {
             return getCommandBooleanValue(getElement(), option.getCommand());
@@ -379,11 +354,11 @@ public class ToggleSwitchBase extends Widget implements HasSize<SizeType>, HasVa
     private native void switchCmd(Element e, String cmd, boolean value) /*-{
         $wnd.jQuery(e).bootstrapSwitch(cmd, value);
     }-*/;
-
+    
     private native String getCommandStringValue(Element e, String cmd) /*-{
         return $wnd.jQuery(e).bootstrapSwitch(cmd);
     }-*/;
-
+    
     private native boolean getCommandBooleanValue(Element e, String cmd) /*-{
         return $wnd.jQuery(e).bootstrapSwitch(cmd);
     }-*/;

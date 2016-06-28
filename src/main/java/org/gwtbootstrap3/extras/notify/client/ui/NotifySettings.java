@@ -108,27 +108,6 @@ public class NotifySettings extends JavaScriptObject {
     }-*/;
 
     /**
-     * If <code>false</code>, the <code>data-notify="dismiss"</code> element in
-     * the template will be hidden. Default is <code>true</code>.
-     *
-     * @param allowDismiss if <code>false</code>, the close icon will be hidden
-     */
-    public final native void setAllowDismiss(boolean allowDismiss) /*-{
-        this.allow_dismiss = allowDismiss;
-    }-*/;
-
-    /**
-     * If <code>true</code>, the notification should display a progress bar.
-     * Default is <code>false</code>.
-     *
-     * @param showProgressbar if <code>true</code>, the progress bar will be displayed
-     * @since 3.0.1
-     */
-    public final native void setShowProgressbar(boolean showProgressbar) /*-{
-        this.showProgressbar = showProgressbar;
-    }-*/;
-
-    /**
      * Set placement of Notify on screen. Default placement is {@link NotifyPlacement#TOP_RIGHT}.
      *
      * @param placement Notify's placement on screen
@@ -139,14 +118,13 @@ public class NotifySettings extends JavaScriptObject {
     }
 
     /**
-     * Set native property of Notify's placement.
+     * If <code>false</code>, the <code>data-notify="dismiss"</code> element in
+     * the template will be hidden. Default is <code>true</code>.
      *
-     * @param placement Notify's placement on screen
+     * @param allowDismiss if <code>false</code>, the close icon will be hidden
      */
-    private final native void setNotifyPlacement(final NotifyPlacement placement) /*-{
-        var from = placement.@org.gwtbootstrap3.extras.notify.client.constants.NotifyPlacement::getFrom()();
-        var align = placement.@org.gwtbootstrap3.extras.notify.client.constants.NotifyPlacement::getAlign()();
-        this.placement = { from: from, align: align };
+    public final native void setAllowDismiss(boolean allowDismiss) /*-{
+        this.allow_dismiss = allowDismiss;
     }-*/;
 
     /**
@@ -164,6 +142,17 @@ public class NotifySettings extends JavaScriptObject {
      */
     public final native void setNewestOnTop(boolean newestOnTop) /*-{
         this.newest_on_top = newestOnTop;
+    }-*/;
+
+    /**
+     * Set native property of Notify's placement.
+     *
+     * @param placement Notify's placement on screen
+     */
+    private final native void setNotifyPlacement(final NotifyPlacement placement) /*-{
+        var from = placement.@org.gwtbootstrap3.extras.notify.client.constants.NotifyPlacement::getFrom()();
+        var align = placement.@org.gwtbootstrap3.extras.notify.client.constants.NotifyPlacement::getAlign()();
+        this.placement = { from: from, align: align };
     }-*/;
 
     /**

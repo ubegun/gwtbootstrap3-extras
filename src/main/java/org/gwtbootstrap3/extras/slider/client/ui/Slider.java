@@ -22,7 +22,6 @@ package org.gwtbootstrap3.extras.slider.client.ui;
 
 import org.gwtbootstrap3.extras.slider.client.ui.base.SliderBase;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Event;
@@ -69,30 +68,6 @@ public class Slider extends SliderBase<Double> {
     }-*/;
 
     @Override
-    protected native void setFormatterOption(JavaScriptObject options) /*-{
-        var slider = this;
-        options.formatter = function(value) {
-            var val = @java.lang.Double::new(D)(value);
-            return slider.@org.gwtbootstrap3.extras.slider.client.ui.Slider::formatTooltip(Ljava/lang/Double;)(val);
-        };
-    }-*/;
-
-    @Override
-    protected native void setFormatter(Element e) /*-{
-        var slider = this;
-        var attr = @org.gwtbootstrap3.extras.slider.client.ui.base.SliderOption::FORMATTER;
-        $wnd.jQuery(e).slider(@org.gwtbootstrap3.extras.slider.client.ui.base.SliderCommand::SET_ATTRIBUTE, attr, function(value) {
-            var val = @java.lang.Double::new(D)(value);
-            return slider.@org.gwtbootstrap3.extras.slider.client.ui.Slider::formatTooltip(Ljava/lang/Double;)(val);
-        });
-    }-*/;
-
-    @Override
-    protected String format(Double value) {
-        return value.toString();
-    }
-
-    @Override
     protected Double convertValue(String value) {
         if (value == null || value.isEmpty())
             return null;
@@ -101,26 +76,22 @@ public class Slider extends SliderBase<Double> {
 
     @Override
     protected native void onSlide(Event event) /*-{
-        var value = @java.lang.Double::new(D)(event.value);
-        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideEvent(Ljava/lang/Double;)(value);
+        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideEvent(Ljava/lang/Double;)(event.value);
     }-*/;
 
     @Override
     protected native void onSlideStart(Event event) /*-{
-        var value = @java.lang.Double::new(D)(event.value);
-        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideStartEvent(Ljava/lang/Double;)(value);
+        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideStartEvent(Ljava/lang/Double;)(event.value);
     }-*/;
 
     @Override
     protected native void onSlideStop(Event event) /*-{
-        var value = @java.lang.Double::new(D)(event.value);
-        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideStopEvent(Ljava/lang/Double;)(value);
+        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireSlideStopEvent(Ljava/lang/Double;)(event.value);
     }-*/;
 
     @Override
     protected native void onSlideChange(Event event) /*-{
-        var value = @java.lang.Double::new(D)(event.value.newValue);
-        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireChangeEvent(Ljava/lang/Double;)(value);
+        this.@org.gwtbootstrap3.extras.slider.client.ui.Slider::fireChangeEvent(Ljava/lang/Double;)(event.value.newValue);
     }-*/;
 
 }

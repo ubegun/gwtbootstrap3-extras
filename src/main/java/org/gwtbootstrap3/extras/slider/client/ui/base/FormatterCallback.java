@@ -22,18 +22,17 @@ package org.gwtbootstrap3.extras.slider.client.ui.base;
 
 /**
  * Formatter callback to display the tool-tip text. Defaults to the slider
- * value.
+ * numeric value.
  *
- * @param <T> slider value type
  * @author Xiaodong SUN
  */
-public interface FormatterCallback<T> {
+public interface FormatterCallback {
 
     /**
      * Returns the formatted tool-tip text to be displayed.
      *
-     * @param value the slider value
+     * @param value the slider numeric value
      * @return the formatted tool-tip text to be displayed.
      */
-    String formatTooltip(T value);
+    String formatTooltip(double value);
 }

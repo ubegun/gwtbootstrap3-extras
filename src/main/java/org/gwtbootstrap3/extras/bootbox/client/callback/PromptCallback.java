@@ -4,7 +4,7 @@ package org.gwtbootstrap3.extras.bootbox.client.callback;
  * #%L
  * GwtBootstrap3
  * %%
- * Copyright (C) 2016 GwtBootstrap3
+ * Copyright (C) 2013 GwtBootstrap3
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,8 @@ package org.gwtbootstrap3.extras.bootbox.client.callback;
  */
 
 /**
- * Prompt callback to handle the user's input.
- *
- * @author Xiaodong Sun
+ * Created by kyle on 2013/12/11.
  */
 public interface PromptCallback extends Callback {
-
-    /**
-     * Callback according to the result.
-     *
-     * @param result <code>null</code> if the user canceled or dismissed
-     *     the dialog, or the value of the text input otherwise
-     */
-    void callback(String result);
-
-    /**
-     * Default {@link PromptCallback} does nothing.
-     */
-    static final PromptCallback DEFAULT_PROMPT_CALLBACK = new PromptCallback() {
-        @Override
-        public void callback(String result) {}
-    };
+    public void callback(String result);
 }
