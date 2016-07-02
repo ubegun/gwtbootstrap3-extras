@@ -30,6 +30,6 @@ import com.google.gwt.resources.client.TextResource;
 public interface TypeaheadClientBundle extends ClientBundle {
   static final TypeaheadClientBundle INSTANCE = GWT.create(TypeaheadClientBundle.class);
 
-  @ClientBundle.Source("resource/js/typeahead.jquery-0.10.5.min.cache.js")
+  @ClientBundle.Source("resource/js/typeahead.jquery-0.10.5.cache.js")
   TextResource typeahead();
 }
